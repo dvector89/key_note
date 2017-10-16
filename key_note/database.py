@@ -1,7 +1,7 @@
 import os
 import sys
 import sqlite3
-import pdb
+import time
 
 DATABASE = os.path.expanduser('~/.key_note')
 if not os.path.exists(DATABASE):
@@ -19,7 +19,8 @@ create table keywords (
 create table notes (
   id integer primary key,
   keywords string not null,
-  content string not null
+  content string not null,
+  time string not null
 );''')
 
 def after_run():
@@ -42,12 +43,14 @@ def insert_note(keywords, content):
 	if i != -1:
 		cursor = CONNECT.execute('select content from notes where id = ?', (pre_ids[i],))
 		content = content + '\n' + cursor.fetchall()[0][0]
-		CONNECT.execute('UPDATE notes set content = ? where id = ?', (content, pre_ids[i]))
+		time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+		CONNECT.execute('UPDATE notes set content = ?, time = ? where id = ?', (content, time_str, pre_ids[i]))
 		print("warning: the note with the keywords is already stored. The content is added to it")
 	else: 
 		not_in = set(range(len(pre_ids))) - set(pre_ids)
 		cur_id = not_in.pop() if not_in else len(pre_ids)
-		CONNECT.execute('insert into notes (id, keywords, content) values (?, ?, ?)', (cur_id, keywords_s, content))
+		time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+		CONNECT.execute('insert into notes (id, keywords, content, time) values (?, ?, ?, ?)', (cur_id, keywords_s, content, time_str))
 		for keyword in keywords:
 			cursor = CONNECT.execute('select ids from keywords where keyword=?', (keyword,))
 			ids = cursor.fetchall()
@@ -65,7 +68,7 @@ def insert_note(keywords, content):
 def get_notes_by_ids(ids):
 	notes = []
 	for i in ids:
-		cursor = CONNECT.execute('select id, keywords, content from notes where id=?', (i,))
+		cursor = CONNECT.execute('select id, keywords, content, time from notes where id=?', (i,))
 		notes.append(cursor.fetchall()[0])
 	return notes
 		
@@ -94,7 +97,8 @@ def change(keywords, content):
 		insert_note(keywords, content)
 		print('Warning: the notes had no note with "%s" keywords. You just added the note.' % ' '.join(keywords)) 
 	elif len(notes) == 1:
-		CONNECT.execute('update notes set content = ? where id = ?', (content, notes[0][0]))
+		time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+		CONNECT.execute('update notes set content = ?, time = ?  where id = ?', (content, time_str, notes[0][0]))
 		CONNECT.commit()
 	else:
 		insert_note(keywords, content)
