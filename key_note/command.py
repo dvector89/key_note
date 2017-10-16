@@ -40,7 +40,7 @@ def scan():
 	key2num.sort(key=lambda x: x[1], reverse=True)
 	print("%d keywords    %d notes\n" %(len(key2num), note_num))
 	print('numbers    keywords')
-	print('------- | ---------'
+	print('------- | ---------')
 	for key, num in key2num:
 		print('% 7d    %s' % (num, key))
 
