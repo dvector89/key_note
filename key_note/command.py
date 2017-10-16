@@ -36,11 +36,11 @@ def delete(keywords, recursive=False):
 	return
 
 def scan():
-	key2num = database.scan_notes()
+	key2num, note_num = database.scan_notes()
 	key2num.sort(key=lambda x: x[1], reverse=True)
-	note_num = sum(x[1] for x in key2num)
 	print("%d keywords    %d notes\n" %(len(key2num), note_num))
 	print('numbers    keywords')
+	print('------- | ---------'
 	for key, num in key2num:
 		print('% 7d    %s' % (num, key))
 

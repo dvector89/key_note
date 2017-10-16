@@ -134,8 +134,9 @@ def delete(keywords, recursive=False):
 
 def scan_notes():
 	key_ids = CONNECT.execute('select keyword, ids from keywords').fetchall()
+	contents = CONNECT.execute('select id from notes').fetchall()
 	result = []
 	for key, ids in key_ids:
 		n = len(ids.strip('_').split('_'))
 		result.append((key, n))	
-	return result
+	return result, len(contents)
