@@ -14,7 +14,7 @@ setup(name='key_note',
 		'Programming Language :: Python'],
 	  url='https://github.com/dvector89/key_note',
 	  author='dvector89',
-	  author_email='shiliangliang.cas@.com',
+	  author_email='shiliangliang.cas@gmail.com',
 	  license='MIT',
 	  packages=['key_note'],
 	  include_package_data=True)
