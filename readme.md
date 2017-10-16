@@ -24,14 +24,14 @@ create table keywords (
   keyword string primary key not null,
   ids string not null
 );
-
 create table notes (
-  id integer primary key autoincrement,
+  id integer primary key,
   keywords string not null,
-  content string not null
+  content string not null,
+  time string not null
 );
 ```
 
 # to do
 1. get notes with bool filter
-2. suppert a gui
+2. support a gui
